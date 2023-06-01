@@ -1,7 +1,8 @@
-from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QPushButton, QDialog, QMessageBox, QLineEdit
+from PyQt6.QtWidgets import QApplication,QDateTimeEdit, QComboBox, QMainWindow, QLabel, QVBoxLayout, QPushButton, QDialog, QMessageBox, QLineEdit
+from PyQt6.QtCore import QDateTime
 from empleado import Empleado
 
-Lista_empleados = []
+Lista_empleados = ["Prueba","prueba2"]
 
 class VentanaPrincipal(QMainWindow):
     def __init__(self):
@@ -93,32 +94,34 @@ class VentanaTurnos(QDialog):
     def init_ui(self):
         self.setWindowTitle("Turnos Nombre Empresa")
 
-        self.etiqueta_dia = QLabel("Dia:")
-        self.campo_dia = QLineEdit()
-        self.etiqueta_mes = QLabel("Mes:")
-        self.campo_mes = QLineEdit()
-        self.etiqueta_hora = QLabel("Hora:")
-        self.campo_hora = QLineEdit()
+        self.etiqueta_fecha_hora = QLabel("Fecha")
+        self.campo_fecha_hora = QDateTimeEdit()
+        self.etiqueta_empleado = QLabel("Empleado")
+        self.campo_empleado = QComboBox()
         
+        
+        #Config
+        #Despliega calendario
+        self.campo_fecha_hora.setCalendarPopup(True)
+        #Solo se pueden ingresar turnos nuevos de la fecha actual en adelante
+        self.campo_fecha_hora.setMinimumDateTime(QDateTime.currentDateTime())
+        self.campo_empleado.addItems(Lista_empleados)
 
         self.boton_guardar = QPushButton("Guardar")
         self.boton_guardar.clicked.connect(self.guardar_datos)
 
         layout = QVBoxLayout()
-        layout.addWidget(self.etiqueta_dia)
-        layout.addWidget(self.campo_dia)
-        layout.addWidget(self.etiqueta_mes)
-        layout.addWidget(self.campo_mes)
-        layout.addWidget(self.etiqueta_hora)
-        layout.addWidget(self.campo_hora)
+        layout.addWidget(self.etiqueta_fecha_hora)
+        layout.addWidget(self.campo_fecha_hora)
+        layout.addWidget(self.etiqueta_empleado)
+        layout.addWidget(self.campo_empleado)
         layout.addWidget(self.boton_guardar)
 
         self.setLayout(layout)
 
     def guardar_datos(self):
-        dia = self.campo_dia.text()
-        mes = self.campo_mes.text()
-        hora = self.campo_hora.text()
+        fecha = self.campo_fecha_hora.text()
+        print(fecha)
 
 
         QMessageBox.information(self, "Turnos nombre empresa", "Turno creado exitosamente.")
