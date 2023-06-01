@@ -19,7 +19,7 @@ class Desvincular(QMainWindow):
         
         #logo
         logo=QLabel(self)#cambiar al centro
-        imagen = QPixmap(r"C:\Users\ChewyDonut\Documents\GitHub\Interfaz_Tpa\logo.png")       
+        imagen = QPixmap(r"./logo.png")   
         logo.setPixmap(imagen)
         
 
