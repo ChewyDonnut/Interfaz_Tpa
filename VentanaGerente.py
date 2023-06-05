@@ -6,6 +6,7 @@ from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QVBoxLay
 from RegistrarEmpleadoTurnos import VentanaRegistro
 from VentanaDesvincular import Desvincular 
 from RegistrarEmpleadoTurnos import VentanaPrincipal
+from ModificarContrasena import ModificarContraseña
 class VentanaGerente(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -13,7 +14,8 @@ class VentanaGerente(QMainWindow):
         self.setWindowIcon(QIcon(r".\logo.png"))  
         self.ventana_registrar = VentanaRegistro()
         self.ventana_desvincular = Desvincular()
-        self.ventana_modificar = VentanaPrincipal()
+        self.ventana_crear_modificar = VentanaPrincipal()
+        self.ventana_modificar_contrasena = ModificarContraseña()
         # Logo y nombre 
         self.logo_lbl = QLabel()
         self.logo_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -32,14 +34,13 @@ class VentanaGerente(QMainWindow):
         # Botones
         self.registrar_btn = QPushButton("Registrar nuevo empleado")
         self.despedir_btn = QPushButton("Desvincular empleado")
-        self.despedir_btn.clicked.connect(self.desvincular)
         self.crear_modificar_btn = QPushButton("Crear o modificar turnos")
         self.modificar_contrasena_btn = QPushButton("Modificar contraseña de empleado")
-        self.modificar_contrasena_btn.clicked.connect(self.modificar)
 
+        self.modificar_contrasena_btn.clicked.connect(lambda: self.ventana_modificar_contrasena.show())
         self.registrar_btn.clicked.connect(lambda: self.ventana_registrar.show())
         self.despedir_btn.clicked.connect(lambda: self.ventana_desvincular.show())
-        self.crear_modificar_btn.clicked.connect(lambda: self.ventana_modificar.show())
+        self.crear_modificar_btn.clicked.connect(lambda: self.ventana_crear_modificar.show())
         # Diseño de la ventana
         layout = QVBoxLayout()
         layout.addWidget(self.logo_lbl)
