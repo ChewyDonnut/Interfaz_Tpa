@@ -14,8 +14,7 @@ class ModificarContraseña(QMainWindow):
         ventanaderecha=QVBoxLayout()#incluye dos botones derechos
         listita=["hola","chao","ehh","si"]
         self.lista=QListWidget()#lista
-        for cosa in listita:
-            self.lista.addItem(cosa)
+        self.lista.addItems(listita)
         
         #logo
         logo=QLabel(self)#cambiar al centro
@@ -28,7 +27,8 @@ class ModificarContraseña(QMainWindow):
         volver=QPushButton("volver")
         volver.clicked.connect(self.cerrar)#creo que se puede achicar la funcion
         mc.clicked.connect(self.modificar_contrasena)
-       
+        mc.clicked.connect(self.get_items)
+
 
         #asignar widgets
         ventanaderecha.addWidget(mc)
@@ -52,6 +52,10 @@ class ModificarContraseña(QMainWindow):
         modificar.exec()
     def cerrar(self):
         self.close()
+    def get_items(self):
+        items=self.lista.selectedItems()
+        for item in items:
+            print(item.text())
 class Modificar(QDialog):
     def __init__(self):
         super().__init__()
@@ -102,7 +106,8 @@ class Modificar(QDialog):
             self.errormensajito()    
             self.close()
        
-            
+    
+    
     def mensajito(self):
         emergente=Emergente()
         emergente.exec()
