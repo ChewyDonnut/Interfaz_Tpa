@@ -1,6 +1,6 @@
 import sys
-from PyQt6.QtCore import Qt, QAbstractTableModel
-from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QGridLayout, QVBoxLayout, QDialog, QHBoxLayout, QLineEdit, QTableWidget
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QMainWindow, QApplication, QWidget, QLabel, QPushButton, QGridLayout, QVBoxLayout, QDialog, QHBoxLayout, QLineEdit, QTableWidget
 
 class HorasTrabajadas(QDialog):
     def __init__(self):
