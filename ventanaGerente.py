@@ -1,5 +1,7 @@
-from modificarContraseña import ModificarContraseña
 import sys
+from desvincular import Desvincular
+from modificarContraseña import ModificarContraseña
+
 from PyQt6.QtGui import QPixmap, QIcon, QFont
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QVBoxLayout, QHBoxLayout
@@ -28,9 +30,10 @@ class VentanaPrincipal(QWidget):
         # Botones
         self.registrar_btn = QPushButton("Registrar nuevo empleado")
         self.despedir_btn = QPushButton("Desvincular empleado")
+        self.despedir_btn.clicked.connect(self.desvincular)
         self.crear_modificar_btn = QPushButton("Crear o modificar turnos")
         self.modificar_contrasena_btn = QPushButton("Modificar contraseña de empleado")
-        self.modificar_contrasena_btn.clicked.connect(self.modificar)
+        self.modificar_contrasena_btn.clicked.connect(self.modificar_contraseña)
         # Diseño de la ventana
         layout = QVBoxLayout()
         layout.addWidget(self.logo_lbl)
@@ -49,9 +52,12 @@ class VentanaPrincipal(QWidget):
         layout.addLayout(layout_botones2)
 
         self.setLayout(layout)
-    def modificar(self):
-        self.modi=ModificarContraseña()
-        self.modi.show()
+    def modificar_contraseña(self):
+        self.modificarContraseña=ModificarContraseña()
+        self.modificarContraseña.show()
+    def desvincular(self):
+        self.desvincular=Desvincular()
+        self.desvincular.show()
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     ventana = VentanaPrincipal("Empresa")
