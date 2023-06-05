@@ -32,6 +32,7 @@ class VentanaGerente(QMainWindow):
         # Botones
         self.registrar_btn = QPushButton("Registrar nuevo empleado")
         self.despedir_btn = QPushButton("Desvincular empleado")
+        self.despedir_btn.clicked.connect(self.desvincular)
         self.crear_modificar_btn = QPushButton("Crear o modificar turnos")
         self.modificar_contrasena_btn = QPushButton("Modificar contraseña de empleado")
         self.modificar_contrasena_btn.clicked.connect(self.modificar)
