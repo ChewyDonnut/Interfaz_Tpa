@@ -1,8 +1,6 @@
 import sys
-import typing
-from PyQt6 import QtCore
-from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QGridLayout, QVBoxLayout, QDialog, QHBoxLayout, QLineEdit
+from PyQt6.QtCore import Qt, QAbstractTableModel
+from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QGridLayout, QVBoxLayout, QDialog, QHBoxLayout, QLineEdit, QTableWidget
 
 class HorasTrabajadas(QDialog):
     def __init__(self):
@@ -55,11 +53,16 @@ class VerTurnos(QDialog):
         self.setModal(True)
         #Elementos
         logo = QLabel("Empresa")
-        self.tabla = QLabel("test")
+        self.tabla = QTableWidget()
         logo.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.tabla.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.boton_volver = QPushButton("Volver al menu")
+
+        #Config
+
+        for i in range(7):
+            self.tabla.insertColumn(i)
+        self.tabla.setHorizontalHeaderLabels(["Lunes","Martes","Miercoles","Jueves","Viernes","Sabado","Domingo"])
         #Conectar botones
         self.boton_volver.clicked.connect(self.hide)
         
