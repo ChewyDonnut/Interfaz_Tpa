@@ -7,12 +7,12 @@ class VentanaPrincipal(QWidget):
     def __init__(self, nombre_empresa):
         super().__init__()
         self.setWindowTitle("Sistema de Gestión")
-        self.setWindowIcon(QIcon(r"C:\Users\luisr\OneDrive\Escritorio\logo empresa.png"))  
+        self.setWindowIcon(QIcon(r".\logo.png"))  
 
         # Logo y nombre 
         self.logo_lbl = QLabel()
         self.logo_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.logo_pixmap = QPixmap(r"C:\Users\luisr\OneDrive\Escritorio\logo empresa.png")
+        self.logo_pixmap = QPixmap(r".\logo.png")
         self.logo_lbl.setPixmap(self.logo_pixmap)
 
         self.empresa_lbl = QLabel(nombre_empresa)
@@ -26,7 +26,7 @@ class VentanaPrincipal(QWidget):
 
         # Botones
         self.registrar_btn = QPushButton("Registrar nuevo empleado")
-        self.despedir_btn = QPushButton("Despedir empleado")
+        self.despedir_btn = QPushButton("Desvincular empleado")
         self.crear_modificar_btn = QPushButton("Crear o modificar turnos")
         self.modificar_contrasena_btn = QPushButton("Modificar contraseña de empleado")
 
