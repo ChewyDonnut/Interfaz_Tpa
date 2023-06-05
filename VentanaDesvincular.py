@@ -81,6 +81,7 @@ class ConfirmarDesvincular(QDialog):
     def ventana_final(self):
         ventanita=VentanFinal()
         ventanita.exec()
+        
 class VentanFinal(QDialog):
     def __init__(self):
         super().__init__()
