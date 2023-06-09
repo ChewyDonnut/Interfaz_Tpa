@@ -11,7 +11,7 @@ from Empleado import Empleado
 # son usuarios de prueba
 #Para ventana empleado loguearse como Empleado:123 para gerente
 # loguearse como Gerente:123
-empleados = [Empleado("Yo","Mucama","Empleado","123"), Gerente("Yo","Gerente","Gerente","123")]
+empleados = [Empleado("Yo","Mucama","Empleado","123"), Gerente("Yo","Gerente","Gerente","123"),Gerente("yo","Gerente","","")]
 usuarios_empleados = {"gerentes": "",
                       "empleados": ""}
 claves = []

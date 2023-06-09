@@ -77,20 +77,25 @@ class VentanaRegistro(QDialog):
 
         self.setLayout(layout)
 
-    def guardar_datos(self):
+    def guardar_datos(self):                    # funcion de guardar datos 
         nombre = self.campo_nombre.text()
         rol = self.campo_rol.text()
         usuario = self.campo_usuario.text()
         contrasena = self.campo_contrasena.text()
+        a=nombre.replace(" ","")
+        b=usuario.replace(" ","")
+        c=contrasena.replace(" ","")
+        d=rol.replace(" ","")
+        if a=="" or b=="" or c=="" or c=="":
+           print("vacioooo")
+        else:
+            Lista_empleados.append(Empleado(nombre,rol,usuario,contrasena))
+            print("Lista De Empleados")
+            for Info_empleado in Lista_empleados:
+                print(Info_empleado)
 
-        Lista_empleados.append(Empleado(nombre,rol,usuario,contrasena))
-
-        print("Lista De Empleados")
-        for Info_empleado in Lista_empleados:
-            print(Info_empleado)
-
-        QMessageBox.information(self, "Empleados (Nombre Empresa)", "Empleado registrado exitosamente.")
-        self.close()
+            QMessageBox.information(self, "Empleados (Nombre Empresa)", "Empleado registrado exitosamente.")
+            self.close()
 
 
 class VentanaTurnos(QDialog):
