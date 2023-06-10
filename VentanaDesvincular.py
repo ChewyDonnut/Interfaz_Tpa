@@ -2,7 +2,7 @@ import sys
 import typing
 from PyQt6 import QtCore
 from PyQt6.QtGui import QPixmap
-from PyQt6.QtWidgets import QWidget,QApplication,QVBoxLayout,QLabel,QLineEdit,QPushButton,QMainWindow,QListWidget,QHBoxLayout,QDialog,QGridLayout
+from PyQt6.QtWidgets import QWidget,QApplication,QVBoxLayout,QLabel,QLineEdit,QPushButton,QMainWindow,QListWidget,QHBoxLayout,QDialog,QGridLayout,QMessageBox
 
 class Desvincular(QMainWindow):
     def __init__(self):
@@ -67,7 +67,7 @@ class ConfirmarDesvincular(QDialog):
         self.eliminar_confirmar=QLineEdit("")#segunda contraseña
         #boton
         cambiar=QPushButton("Desvincular")
-        cambiar.clicked.connect(self.ventana_final)
+        cambiar.clicked.connect(self.confirmacion)
         #asignar las al grid
         datos.addWidget(self.usuario,0,0)
         datos.addWidget(self.confirmar_usuario,1,0)
@@ -78,21 +78,20 @@ class ConfirmarDesvincular(QDialog):
         ventanita.addLayout(datos)
         ventanita.addWidget(cambiar)
         self.setLayout(ventanita)
-    def ventana_final(self):
-        ventanita=VentanFinal()
-        ventanita.exec()
-        
-class VentanFinal(QDialog):
-    def __init__(self):
-        super().__init__()
-        self.setWindowTitle("Desvinculacion")
-        cajita=QVBoxLayout()
-        mensaje=QLabel("Empleado ha sido desvinculado correctamente")
-        boton=QPushButton("volver")
-        
-        cajita.addWidget(mensaje)
-        cajita.addWidget(boton)
-        self.setLayout(cajita)
+    def confirmacion(self):
+        a=self.eliminar_confirmar.text()
+        b=self.eliminar_usuario.text()
+        c=a.replace(" ","")
+        if a==b:
+            if c!="":         
+                QMessageBox.information(self, "Empleados (Nombre Empresa)", "Empleado registrado exitosamente.")
+                self.close()
+            else:
+               QMessageBox.information(self, "Empleados (Nombre Empresa)", "contrasña vacia")
+
+        else:
+            QMessageBox.information(self, "Empleados (Nombre Empresa)", "Contraseñas diferentes.")
+            
 
 if __name__=="__main__":
     app=QApplication(sys.argv)

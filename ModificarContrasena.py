@@ -1,6 +1,6 @@
 import sys
 from PyQt6.QtGui import QPixmap
-from PyQt6.QtWidgets import QWidget,QApplication,QVBoxLayout,QLabel,QLineEdit,QPushButton,QMainWindow,QListWidget,QHBoxLayout,QDialog,QGridLayout
+from PyQt6.QtWidgets import QWidget,QApplication,QVBoxLayout,QLabel,QLineEdit,QPushButton,QMainWindow,QListWidget,QHBoxLayout,QDialog,QGridLayout,QMessageBox
 
 class ModificarContraseña(QMainWindow):
     def __init__(self):
@@ -18,7 +18,7 @@ class ModificarContraseña(QMainWindow):
         
         #logo
         logo=QLabel(self)#cambiar al centro
-        imagen = QPixmap(r"C:\Users\ChewyDonut\Documents\GitHub\Interfaz_Tpa\logo.png")       
+        imagen = QPixmap(r"./logo.png")       
         logo.setPixmap(imagen)
         
 
@@ -96,76 +96,16 @@ class Modificar(QDialog):
         b=self.modificar_confirmar.text()
         c=a.replace(" ","")
         if a==b:
-            if c!="":
-                self.mensajito()
+            if c!="":         
+                QMessageBox.information(self, "Modificar contraseña (empleado)", "Contraseña cambiada.")
                 self.close()
             else:
-                self.vacio()
-                self.close()   
+               QMessageBox.information(self, "Modificar contraseña (empleado)", "contrasña vacia")
+
         else:
-            self.errormensajito()    
-            self.close()
+            QMessageBox.information(self, "Modificar contraseña (empleado)", "Contraseñas diferentes.")
        
-    
-    
-    def mensajito(self):
-        emergente=Emergente()
-        emergente.exec()
-    def vacio(self):
-        vacio=Vacio()
-        vacio.exec()
-    
-    def errormensajito(self):
-        error=ErrorEmergente()
-        error.exec()
-class Emergente(QDialog):
-    def __init__(self):
-        super().__init__()
-        cajita=QVBoxLayout()            
-        mensaje=QLabel("La contaseña ha sido cambiada")
-        boton=QPushButton("Volver")
-        boton.clicked.connect(self.boton_volver)
-        cajita.addWidget(mensaje)
-        cajita.addWidget(boton)
-        
-        ventana=QWidget()
-        ventana.setLayout(cajita)
-        self.setLayout(cajita)
-        
-    def boton_volver(self):
-        self.close()
-class ErrorEmergente(QDialog):
-    def __init__(self):
-        super().__init__()
-        cajita=QVBoxLayout()            
-        mensaje=QLabel("Error Contraseñas diferentes")
-        boton=QPushButton("Volver")
-        boton.clicked.connect(self.volverEmergente)
-        cajita.addWidget(mensaje)
-        cajita.addWidget(boton)
-        
-        ventana=QWidget()
-        ventana.setLayout(cajita)
-        self.setLayout(cajita)
-        
-    def volverEmergente(self):
-        self.close()
-class Vacio(QDialog):
-    def __init__(self):
-        super().__init__()
-        cajita=QVBoxLayout()            
-        mensaje=QLabel("Error Contraseñas vacias")
-        boton=QPushButton("Volver")
-        boton.clicked.connect(self.volverEmergente)
-        cajita.addWidget(mensaje)
-        cajita.addWidget(boton)
-        
-        ventana=QWidget()
-        ventana.setLayout(cajita)
-        self.setLayout(cajita)
-        
-    def volverEmergente(self):
-        self.close()
+#se puede arreglar el mesnaje al colocar una contraseña y otra vacia para que diga que haya una vacia
 
 if __name__=="__main__":
     app=QApplication(sys.argv)

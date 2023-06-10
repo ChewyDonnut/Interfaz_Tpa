@@ -87,7 +87,7 @@ class VentanaRegistro(QDialog):
         c=contrasena.replace(" ","")
         d=rol.replace(" ","")
         if a=="" or b=="" or c=="" or c=="":
-           print("vacioooo")
+            QMessageBox.information(self, "Empleados (Nombre Empresa)", "debe rellenar todos los campos.")
         else:
             Lista_empleados.append(Empleado(nombre,rol,usuario,contrasena))
             print("Lista De Empleados")
