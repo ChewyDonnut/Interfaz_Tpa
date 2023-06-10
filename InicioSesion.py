@@ -16,12 +16,12 @@ usuarios_empleados = {"gerentes": "",
                       "empleados": ""}
 claves = []
 
-#for i in range(len(empleados)):
-#    if empleados[i].getRol() == "Gerente":
-#       usuarios_empleados["gerentes"] += empleados[i].getUsuario()
- #   else:
- #       usuarios_empleados["empleados"] += empleados[i].getUsuario()
- #   claves.append(empleados[i].getContrasena())
+for i in range(len(empleados)):
+    if empleados[i].getRol() == "Gerente":
+        usuarios_empleados["gerentes"] += empleados[i].getUsuario()
+    else:
+        usuarios_empleados["empleados"] += empleados[i].getUsuario()
+    claves.append(empleados[i].getContrasena())
 
 class VentanaInicioSesion(QWidget):
     def __init__(self):
