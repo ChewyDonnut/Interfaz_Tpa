@@ -1,10 +1,10 @@
+import csv
 from PyQt6.QtWidgets import QWidget, QApplication,QDateTimeEdit, QComboBox, QMainWindow, QLabel, QVBoxLayout, QPushButton, QDialog, QMessageBox, QLineEdit, QHBoxLayout
 from PyQt6.QtCore import QDateTime
 from Empleado import Empleado
 from Turno import Turno
-Lista_empleados = []
 lista_turnos = []
-
+Lista_empleados=[]
 class VentanaPrincipal(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -78,6 +78,7 @@ class VentanaRegistro(QDialog):
         self.setLayout(layout)
 
     def guardar_datos(self):                    # funcion de guardar datos 
+               
         nombre = self.campo_nombre.text()
         rol = self.campo_rol.text()
         usuario = self.campo_usuario.text()
@@ -89,10 +90,7 @@ class VentanaRegistro(QDialog):
         if a=="" or b=="" or c=="" or c=="":
             QMessageBox.information(self, "Empleados (Nombre Empresa)", "debe rellenar todos los campos.")
         else:
-            Lista_empleados.append(Empleado(nombre,rol,usuario,contrasena))
-            print("Lista De Empleados")
-            for Info_empleado in Lista_empleados:
-                print(Info_empleado)
+        
 
             QMessageBox.information(self, "Empleados (Nombre Empresa)", "Empleado registrado exitosamente.")
             self.close()
