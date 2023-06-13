@@ -102,6 +102,9 @@ class VentanaRegistro(QDialog):
             archivo_csv.write(usuario + ",")
             archivo_csv.write(contrasena + "\n")
             QMessageBox.information(self, "Empleados (Nombre Empresa)", "Empleado registrado exitosamente.")
+            self.campo_nombre.clear()
+            self.campo_usuario.clear()
+            self.campo_contrasena.clear()
             self.close()
 
 
