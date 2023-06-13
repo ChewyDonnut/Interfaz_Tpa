@@ -54,8 +54,18 @@ class VentanaRegistro(QDialog):
 
         self.etiqueta_nombre = QLabel("Nombre:")
         self.campo_nombre = QLineEdit()
-        self.etiqueta_rol = QLabel("Rol:")
-        self.campo_rol = QLineEdit()
+        self.etiqueta_rol=QLabel("Rol")
+        self.combo_box=QComboBox()
+        self.combo_box.addItem("Gerente")
+        self.combo_box.addItem("Jefe de turno")
+        self.combo_box.addItem("Recepcionista")
+        self.combo_box.addItem("Botonoes")        
+        self.combo_box.addItem("Guardia de seguridad")
+        self.combo_box.addItem("Mucama")
+        self.combo_box.addItem("Cocinero")        
+        self.combo_box.addItem("Bartender")
+        self.combo_box.addItem("Camarero")
+
         self.etiqueta_usuario = QLabel("Usuario")
         self.campo_usuario = QLineEdit()
         self.etiqueta_contrasena = QLabel("Contrasena:")
@@ -68,7 +78,7 @@ class VentanaRegistro(QDialog):
         layout.addWidget(self.etiqueta_nombre)
         layout.addWidget(self.campo_nombre)
         layout.addWidget(self.etiqueta_rol)
-        layout.addWidget(self.campo_rol)
+        layout.addWidget(self.combo_box)
         layout.addWidget(self.etiqueta_usuario)
         layout.addWidget(self.campo_usuario)
         layout.addWidget(self.etiqueta_contrasena)
@@ -79,19 +89,18 @@ class VentanaRegistro(QDialog):
 
     def guardar_datos(self):                    # funcion de guardar datos 
                
-        nombre = self.campo_nombre.text()
-        rol = self.campo_rol.text()
-        usuario = self.campo_usuario.text()
-        contrasena = self.campo_contrasena.text()
-        a=nombre.replace(" ","")
-        b=usuario.replace(" ","")
-        c=contrasena.replace(" ","")
-        d=rol.replace(" ","")
-        if a=="" or b=="" or c=="" or c=="":
+        nombre = self.campo_nombre.text().strip()
+        usuario = self.campo_usuario.text().strip()
+        contrasena = self.campo_contrasena.text().strip()
+        rol=self.combo_box.currentText()
+        if not nombre or not usuario or not contrasena:
             QMessageBox.information(self, "Empleados (Nombre Empresa)", "debe rellenar todos los campos.")
         else:
-        
-
+           with open("archivo.csv","a",newline="") as archivo_csv:
+            archivo_csv.write(nombre + ",")
+            archivo_csv.write(rol + ",")
+            archivo_csv.write(usuario + ",")
+            archivo_csv.write(contrasena + "\n")
             QMessageBox.information(self, "Empleados (Nombre Empresa)", "Empleado registrado exitosamente.")
             self.close()
 
