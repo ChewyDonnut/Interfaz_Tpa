@@ -70,7 +70,10 @@ class VentanaRegistro(QDialog):
         self.campo_usuario = QLineEdit()
         self.etiqueta_contrasena = QLabel("Contrasena:")
         self.campo_contrasena = QLineEdit()
-
+        self.campo_contrasena.setEchoMode(QLineEdit.EchoMode.Password)
+        self.etiqueta_contrasena_confirmar = QLabel("confirmar Contrasena:")
+        self.campo_contrasena_confirmar=QLineEdit()
+        self.campo_contrasena_confirmar.setEchoMode(QLineEdit.EchoMode.Password)
         self.boton_guardar = QPushButton("Guardar")
         self.boton_guardar.clicked.connect(self.guardar_datos)
 
@@ -83,6 +86,8 @@ class VentanaRegistro(QDialog):
         layout.addWidget(self.campo_usuario)
         layout.addWidget(self.etiqueta_contrasena)
         layout.addWidget(self.campo_contrasena)
+        layout.addWidget(self.etiqueta_contrasena_confirmar)
+        layout.addWidget(self.campo_contrasena_confirmar)
         layout.addWidget(self.boton_guardar)
 
         self.setLayout(layout)
@@ -92,9 +97,12 @@ class VentanaRegistro(QDialog):
         nombre = self.campo_nombre.text().strip()
         usuario = self.campo_usuario.text().strip()
         contrasena = self.campo_contrasena.text().strip()
+        contrasena_confirmar=self.campo_contrasena_confirmar.text().strip()
         rol=self.combo_box.currentText()
         if not nombre or not usuario or not contrasena:
             QMessageBox.information(self, "Empleados (Nombre Empresa)", "debe rellenar todos los campos.")
+        elif contrasena!= contrasena_confirmar:
+            QMessageBox.information(self,"Empleados (Nombre Empresa)","contraseñas diferentes")
         else:
            with open("archivo.csv","a",newline="") as archivo_csv:
             archivo_csv.write(nombre + ",")
@@ -105,6 +113,7 @@ class VentanaRegistro(QDialog):
             self.campo_nombre.clear()
             self.campo_usuario.clear()
             self.campo_contrasena.clear()
+            self.campo_contrasena_confirmar.clear()
             self.close()
 
 
