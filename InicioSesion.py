@@ -27,19 +27,13 @@ class VentanaInicioSesion(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Inicio de sesión")
-        self.setWindowIcon(QIcon(r"C:\Users\luisr\OneDrive\Escritorio\logo empresa.png"))
         self.ventana_gerente = VentanaGerente()
         self.ventana_empleado = VentanaEmpleado()
-        # Logo y nombre
-        self.etiqueta_logo = QLabel()
-        self.etiqueta_logo.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.pix_map_logo = QPixmap((r"C:\Users\luisr\OneDrive\Escritorio\logo empresa.png"))
-        self.etiqueta_logo.setPixmap(self.pix_map_logo)
 
-        self.etiqueta_empresa = QLabel("Empresa")
-        self.etiqueta_empresa.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.etiqueta_empresa.setStyleSheet("font-size: 20px; font-weight: bold;")
 
+        logo = QLabel(self)
+        imagen = QPixmap((r"logo.png"))
+        logo.setPixmap(imagen)
         # inicio de sesión
         self.etiqueta_usuario = QLabel("Usuario:")
         self.entrada_usuario = QLineEdit()
@@ -51,8 +45,7 @@ class VentanaInicioSesion(QWidget):
 
         # Diseño de la ventana
         layout = QVBoxLayout()
-        layout.addWidget(self.etiqueta_logo)
-        layout.addWidget(self.etiqueta_empresa)
+        layout.addWidget(logo)
         layout.addWidget(self.etiqueta_usuario)
         layout.addWidget(self.entrada_usuario)
         layout.addWidget(self.etiqueta_contrasena)  
