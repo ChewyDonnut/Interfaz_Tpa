@@ -154,7 +154,7 @@ class VentanaTurnos(QDialog):
     def guardar_datos(self):
         fecha = self.campo_fecha_hora.text()
         empleado = self.campo_empleado.currentText()
-        lista_turnos.append(Turno(empleado,fecha))
+       
 
         QMessageBox.information(self, "Turnos nombre empresa", "Turno creado exitosamente.")
         self.close()

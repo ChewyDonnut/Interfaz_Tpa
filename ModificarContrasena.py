@@ -1,7 +1,7 @@
 import sys
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QWidget,QApplication,QVBoxLayout,QLabel,QLineEdit,QPushButton,QMainWindow,QListWidget,QHBoxLayout,QDialog,QGridLayout,QMessageBox
-
+from PyQt6.QtCore import Qt
 class ModificarContraseña(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -17,10 +17,10 @@ class ModificarContraseña(QMainWindow):
         self.lista.addItems(listita)
         
         #logo
-        logo=QLabel(self)#cambiar al centro
+        logo=QLabel(self)
         imagen = QPixmap(r"./logo.png")       
         logo.setPixmap(imagen)
-        
+        logo.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         #botones
         mc=QPushButton("Modificar Contraseña")

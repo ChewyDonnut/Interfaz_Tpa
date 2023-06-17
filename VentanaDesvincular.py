@@ -1,6 +1,6 @@
 import sys
 import typing
-from PyQt6 import QtCore
+from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QWidget,QApplication,QVBoxLayout,QLabel,QLineEdit,QPushButton,QMainWindow,QListWidget,QHBoxLayout,QDialog,QGridLayout,QMessageBox
 
@@ -21,7 +21,7 @@ class Desvincular(QMainWindow):
         logo=QLabel(self)#cambiar al centro
         imagen = QPixmap(r"./logo.png")   
         logo.setPixmap(imagen)
-        
+        logo.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         #botones
         mc=QPushButton("Desvincular")

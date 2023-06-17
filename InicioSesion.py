@@ -34,6 +34,7 @@ class VentanaInicioSesion(QWidget):
         logo = QLabel(self)
         imagen = QPixmap((r"logo.png"))
         logo.setPixmap(imagen)
+        logo.setAlignment(Qt.AlignmentFlag.AlignCenter)
         # inicio de sesión
         self.etiqueta_usuario = QLabel("Usuario:")
         self.entrada_usuario = QLineEdit()
