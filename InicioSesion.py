@@ -55,7 +55,7 @@ class VentanaInicioSesion(QWidget):
         layout.addWidget(self.etiqueta_empresa)
         layout.addWidget(self.etiqueta_usuario)
         layout.addWidget(self.entrada_usuario)
-        layout.addWidget(self.etiqueta_contrasena)
+        layout.addWidget(self.etiqueta_contrasena)  
         layout.addWidget(self.entrada_contrasena)
         layout.addWidget(self.boton_inicio_sesion)
 
