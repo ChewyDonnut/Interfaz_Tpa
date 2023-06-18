@@ -118,7 +118,6 @@ class VentanaRegistro(QDialog):
 
 
 class VentanaTurnos(QDialog):
-
     def __init__(self):
         super().__init__()
         self.init_ui()
@@ -130,14 +129,14 @@ class VentanaTurnos(QDialog):
         self.campo_fecha_hora = QDateTimeEdit()
         self.etiqueta_empleado = QLabel("Empleado")
         self.campo_empleado = QComboBox()
-        
-        #Config
-        #Despliega calendario
+
+        # Configuración
+        # Despliega calendario
         self.campo_fecha_hora.setCalendarPopup(True)
-        #Solo se pueden ingresar turnos nuevos de la fecha actual en adelante
+        # Solo se pueden ingresar turnos nuevos de la fecha actual en adelante
         self.campo_fecha_hora.setMinimumDateTime(QDateTime.currentDateTime())
-        for i in range(len(Lista_empleados)):
-            self.campo_empleado.addItem(Lista_empleados[i].getNombre())
+
+        self.cargar_empleados_csv()
 
         self.boton_guardar = QPushButton("Guardar")
         self.boton_guardar.clicked.connect(self.guardar_datos)
@@ -151,13 +150,30 @@ class VentanaTurnos(QDialog):
 
         self.setLayout(layout)
 
-    def guardar_datos(self):
-        fecha = self.campo_fecha_hora.text()
-        empleado = self.campo_empleado.currentText()
-       
+    def cargar_empleados_csv(self):
+        with open("archivo.csv", "r") as archivo_csv:
+            reader = csv.reader(archivo_csv)
+            for row in reader:
+                empleado = row[0]
+                self.campo_empleado.addItem(empleado)
 
-        QMessageBox.information(self, "Turnos nombre empresa", "Turno creado exitosamente.")
+    def guardar_datos(self):
+        fecha = self.campo_fecha_hora.dateTime().toString("yyyy-MM-dd HH:mm:ss")
+        empleado = self.campo_empleado.currentText()
+
+        turno = [empleado, fecha]
+        self.guardar_turno_csv(turno)
+
+        QMessageBox.information(self, "Turnos Nombre Empresa", "Turno creado exitosamente.")
         self.close()
+
+    def guardar_turno_csv(self, turno):
+        with open("turnos.csv", "a", newline="") as archivo_csv:
+            writer = csv.writer(archivo_csv)
+            writer.writerow(turno)
+
+        # Actualizar la lista de turnos
+        lista_turnos.append(turno)
 
 class VentanaModificar(QDialog):
     def __init__(self):
