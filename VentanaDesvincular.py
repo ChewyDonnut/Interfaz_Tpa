@@ -108,7 +108,7 @@ class ConfirmarDesvincular(QDialog):
         self.load_employee_data()
 
     def load_employee_data(self):
-        file_path = "empleados.csv"
+        file_path = "archivo.csv"
         employee_data = self.read_csv(file_path)
         if employee_data:
             model = EmployeeTableModel(employee_data)
@@ -122,7 +122,7 @@ class ConfirmarDesvincular(QDialog):
                 for row in reader:
                     employee_data.append(row)
         except FileNotFoundError:
-            QMessageBox.critical(self, "Error", "Archivo no encontrado: empleados.csv")
+            QMessageBox.critical(self, "Error", "Archivo no encontrado: archivo.csv")
         return employee_data
 
     def write_csv(self, file_path, data):
@@ -131,12 +131,12 @@ class ConfirmarDesvincular(QDialog):
                 writer = csv.writer(csvfile)
                 writer.writerows(data)
         except FileNotFoundError:
-            QMessageBox.critical(self, "Error", "Archivo no encontrado: empleados.csv")
+            QMessageBox.critical(self, "Error", "Archivo no encontrado: archivo.csv")
 
     def confirmacion(self):
         user_name = self.eliminar_usuario.text().strip()
         if user_name:
-            file_path = "empleados.csv"
+            file_path = "archivo.csv"
             employee_data = self.read_csv(file_path)
             if employee_data:
                 updated_employee_data = [employee for employee in employee_data if employee[0] != user_name]

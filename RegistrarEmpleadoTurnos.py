@@ -104,7 +104,7 @@ class VentanaRegistro(QDialog):
         elif contrasena!= contrasena_confirmar:
             QMessageBox.information(self,"Empleados (Nombre Empresa)","contraseñas diferentes")
         else:
-           with open("empleados.csv","a",newline="") as archivo_csv:
+           with open("archivo.csv","a",newline="") as archivo_csv:
             archivo_csv.write(nombre + ",")
             archivo_csv.write(rol + ",")
             archivo_csv.write(usuario + ",")
@@ -151,7 +151,7 @@ class VentanaTurnos(QDialog):
         self.setLayout(layout)
 
     def cargar_empleados_csv(self):
-        with open("empleados.csv", "r") as archivo_csv:
+        with open("archivo.csv", "r") as archivo_csv:
             reader = csv.reader(archivo_csv)
             for row in reader:
                 empleado = row[0]
