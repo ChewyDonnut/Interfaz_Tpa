@@ -10,14 +10,14 @@ class EmployeeTableModel(QAbstractTableModel):
         self.data = data
 
     def rowCount(self, parent=QModelIndex()) -> int:
-        return len(self.data)
+        return len(self.data) - 1  
 
     def columnCount(self, parent=QModelIndex()) -> int:
         return len(self.data[0])
 
     def data(self, index, role=Qt.ItemDataRole.DisplayRole):
         if role == Qt.ItemDataRole.DisplayRole:
-            row = index.row()
+            row = index.row() + 1  
             col = index.column()
             return str(self.data[row][col])
 
@@ -26,10 +26,7 @@ class EmployeeTableModel(QAbstractTableModel):
     def headerData(self, section, orientation, role):
         if role == Qt.ItemDataRole.DisplayRole:
             if orientation == Qt.Orientation.Horizontal:
-                return f"Columna {section + 1}"
-            elif orientation == Qt.Orientation.Vertical:
-                return f"Fila {section + 1}"
-
+                return self.data[0][section]  
         return None
 
 class Desvincular(QMainWindow):
