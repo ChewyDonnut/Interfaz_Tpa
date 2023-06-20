@@ -1,65 +1,47 @@
 import sys
+import typing
 import csv
-from PyQt6.QtCore import Qt, QAbstractTableModel, QModelIndex
+from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap
-from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QMainWindow, QTableView, QHBoxLayout, QDialog, QGridLayout, QMessageBox
-
-class EmployeeTableModel(QAbstractTableModel):
-    def __init__(self, data):
-        super().__init__()
-        self.data = data
-
-    def rowCount(self, parent=QModelIndex()) -> int:
-        return len(self.data) - 1  
-
-    def columnCount(self, parent=QModelIndex()) -> int:
-        return len(self.data[0])
-
-    def data(self, index, role=Qt.ItemDataRole.DisplayRole):
-        if role == Qt.ItemDataRole.DisplayRole:
-            row = index.row() + 1  
-            col = index.column()
-            return str(self.data[row][col])
-
-        return None
-
-    def headerData(self, section, orientation, role):
-        if role == Qt.ItemDataRole.DisplayRole:
-            if orientation == Qt.Orientation.Horizontal:
-                return self.data[0][section]  
-        return None
+from PyQt6.QtWidgets import QWidget,QApplication,QVBoxLayout,QLabel,QLineEdit,QPushButton,QMainWindow,QListWidget,QHBoxLayout,QDialog,QGridLayout,QMessageBox
 
 class Desvincular(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Modificar Contraseña")
+        self.setWindowTitle("Desvincular Empleados")
 
-        #ventanas
+    #ventanas
         #ventana principal
         ventanaGrande=QVBoxLayout()# integra logo  y subventana
-        subVentana=QHBoxLayout()#integra lista a la derecha y ventana derecha
+        subVentana=QVBoxLayout()#integra lista a la derecha y ventana derecha
         ventanaderecha=QVBoxLayout()#incluye dos botones derechos
-        self.lista=QTableView()#lista
-      
+        self.lista=QListWidget()#lista
+        self.cargar_empleados()
+        self.lista.itemDoubleClicked.connect(self.eliminar_empleado)
+
+        self.titulo = QLabel("Ventana para desvincular empleados")
+        self.indicacion = QLabel("Para eliminar un empleado, presione dos veces el empleado a eliminar")
         
         #logo
         logo=QLabel(self)#cambiar al centro
         imagen = QPixmap(r"./logo.png")   
         logo.setPixmap(imagen)
+        
         logo.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         #botones
-        mc=QPushButton("Desvincular")
         volver=QPushButton("volver")
         #volver.clicked.connect(self.cerrar)#creo que se puede achicar la funcion
-        mc.clicked.connect(self.emergente_desvincular)
+       
 
         #asignar widgets
-        ventanaderecha.addWidget(mc)
-        ventanaderecha.addWidget(volver)
         subVentana.addWidget(self.lista)
-        
+        subVentana.addWidget(volver)
         ventanaGrande.addWidget(logo)
+        ventanaGrande.addWidget(self.titulo)
+        ventanaGrande.addWidget(self.indicacion)
+        ventanaGrande.addLayout(subVentana)
+        
 
         #asignar ventanas
         ventana=QWidget()
@@ -68,88 +50,41 @@ class Desvincular(QMainWindow):
         ventana.setLayout(ventanaGrande)
         self.setCentralWidget(ventana)
 
-    def emergente_desvincular(self):
-        ventanita=ConfirmarDesvincular()
-        ventanita.exec()
-
-class ConfirmarDesvincular(QDialog):
-    def __init__(self):
-        super().__init__()
-        self.setWindowTitle("Desvincular Empleado")
-
-        #ventana
-        ventanita=QVBoxLayout()
-
-        #grid
-        datos=QGridLayout()
-        
-        #informacion de pantalla
-        self.titulo=QLabel("Desvinculación de usuario")#aqui va el nombre de la persona tambien 
-        self.usuario=QLabel("Usuario")
-        #dato a ingresar
-        self.eliminar_usuario=QLineEdit("")#nombre de usuario
-        #boton
-        cambiar=QPushButton("Desvincular")
-        cambiar.clicked.connect(self.confirmacion)
-        #asignar los al grid
-        datos.addWidget(self.usuario, 0, 0)
-        datos.addWidget(self.eliminar_usuario, 0, 1)
-
-        self.vista_tabla = QTableView()
-        ventanita.addWidget(self.titulo)
-        ventanita.addLayout(datos)
-        ventanita.addWidget(cambiar)
-        ventanita.addWidget(self.vista_tabla)
-        self.setLayout(ventanita)
-
-        self.load_employee_data()
-
-    def load_employee_data(self):
-        file_path = "empleados.csv"
-        employee_data = self.read_csv(file_path)
-        if employee_data:
-            model = EmployeeTableModel(employee_data)
-            self.vista_tabla.setModel(model)
-
-    def read_csv(self, file_path):
-        employee_data = []
+    def cargar_empleados(self):
         try:
-            with open(file_path, newline='') as csvfile:
-                reader = csv.reader(csvfile)
-                for row in reader:
-                    employee_data.append(row)
+            with open('empleados.csv', newline='') as archivo:
+                reader = csv.reader(archivo)
+                for empleado in reader:
+                    nombre = empleado[0]
+                    self.lista.addItem(nombre)
         except FileNotFoundError:
-            QMessageBox.critical(self, "Error", "Archivo no encontrado: empleados.csv")
-        return employee_data
+            QMessageBox.warning(self, "Error", "El archivo empleados.csv no se encontró.")
+        except Exception as e:
+            QMessageBox.warning(self, "Error", f"Ocurrió un error al cargar los empleados: {str(e)}")
 
-    def write_csv(self, file_path, data):
-        try:
-            with open(file_path, "w", newline='') as csvfile:
-                writer = csv.writer(csvfile)
-                writer.writerows(data)
-        except FileNotFoundError:
-            QMessageBox.critical(self, "Error", "Archivo no encontrado: empleados.csv")
+    def eliminar_empleado(self, item):
+        empleado_seleccionado = item.text()
+        respuesta = QMessageBox.question(self, "Confirmación", f"¿Seguro que desea eliminar al empleado '{empleado_seleccionado}'?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        if respuesta == QMessageBox.StandardButton.Yes:
+            try:
+                with open('empleados.csv', 'r') as archivo:
+                    empleados = list(csv.reader(archivo))
+            
+                with open('empleados.csv', 'w', newline='') as archivo:
+                    writer = csv.writer(archivo)
+                    for empleado in empleados:
+                        if empleado[0] != empleado_seleccionado:
+                            writer.writerow(empleado)
+                
+                self.lista.takeItem(self.lista.row(item))
+            except FileNotFoundError:
+                QMessageBox.warning(self, "Error", "El archivo empleados.csv no se encontró.")
+            except Exception as e:
+                QMessageBox.warning(self, "Error", f"Ocurrió un error al eliminar el empleado: {str(e)}")
+  
 
-    def confirmacion(self):
-        user_name = self.eliminar_usuario.text().strip()
-        if user_name:
-            file_path = "empleados.csv"
-            employee_data = self.read_csv(file_path)
-            if employee_data:
-                updated_employee_data = [employee for employee in employee_data if employee[0] != user_name]
-                if len(updated_employee_data) < len(employee_data):
-                    reply = QMessageBox.question(self, "Confirmar Desvinculación", "¿Estás seguro que deseas desvincular al empleado?",
-                                                 QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.Cancel)
-                    if reply == QMessageBox.StandardButton.Yes:
-                        self.write_csv(file_path, updated_employee_data)
-                        self.load_employee_data()
-                else:
-                    QMessageBox.information(self, "Empleados (Nombre Empresa)", "El usuario no fue encontrado.")
-        else:
-            QMessageBox.information(self, "Empleados (Nombre Empresa)", "Por favor ingresa un usuario.")
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    ventana = Desvincular()
+if __name__=="__main__":
+    app=QApplication(sys.argv)
+    ventana=Desvincular()
     ventana.show()
     sys.exit(app.exec())
