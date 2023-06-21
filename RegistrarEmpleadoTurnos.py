@@ -66,15 +66,23 @@ class VentanaRegistro(QDialog):
 
     def cargar_empleados_csv(self):
         with open("empleados.csv", "r") as archivo_csv:
-            reader = csv.DictReader(archivo_csv)
+            reader = csv.reader(archivo_csv)
+            next(reader)  # Saltar la primera fila de encabezado
             for row in reader:
-                empleado = row["Nombre"]
-                self.campo_empleado.addItem(empleado)
+                empleado = row[0]
+                with open("empleados.csv", "r") as roles_csv:
+                    roles_reader = csv.reader(roles_csv)
+                    for roles_row in roles_reader:
+                        if empleado == roles_row[0]:
+                            rol = roles_row[1]
+                            self.campo_empleado.addItem(empleado, userData=rol)  # Usar userData para almacenar el rol
+                            break
 
     def guardar_datos(self):
         dia = self.calendario.selectedDate().toString('yyyy-MM-dd')
         horario = self.campo_horario.currentText()
         empleado = self.campo_empleado.currentText()
+        rol = self.campo_empleado.currentData()  # Obtener el rol del empleado seleccionado
 
         if horario == "Mañana":
             horario = "08:00 a 16:00"
@@ -93,7 +101,9 @@ class VentanaRegistro(QDialog):
         if not existente:
             with open("Turnos.csv", "a", newline="") as archivo_csv:
                 writer = csv.writer(archivo_csv)
-                writer.writerow([empleado, horario, dia])
+                writer.writerow(["Nombre", "Turno", "Fecha", "Rol"])  # Agregar la primera fila de encabezado
+
+                writer.writerow([empleado, horario, dia, rol])  # Agregar el rol en la fila
             QMessageBox.information(self, "Turnos Nombre Empresa", "Turno creado exitosamente.")
         else:
             QMessageBox.information(self, "Turnos Nombre Empresa", "El turno ya existe para el empleado seleccionado.")
@@ -108,9 +118,9 @@ class VentanaModificar(QDialog):
         self.campo_empleado = QComboBox()
         self.campo_fecha = QComboBox()
         self.campo_horario = QComboBox()
-        self.campo_horario.addItem("Mañana")        
+        self.campo_horario.addItem("Mañana")
         self.campo_horario.addItem("Tarde")
-        self.campo_horario.addItem("Noche")        
+        self.campo_horario.addItem("Noche")
         self.boton_modificar = QPushButton("Modificar")
         self.boton_modificar.clicked.connect(self.modificar_turno)
 
@@ -172,13 +182,9 @@ class VentanaModificar(QDialog):
             writer.writerows(filas)
 
         if encontrado:
-            
             QMessageBox.information(self, "Modificar Turno", "Turno modificado exitosamente.")
         else:
-            QMessageBox.warning(self, "Modificar Turno", "No se encontró el turno.")
-
-        self.close()
-
+            QMessageBox.information(self, "Modificar Turno", "No se encontró el turno especificado.")
 
 if __name__ == '__main__':
     app = QApplication([])
