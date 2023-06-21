@@ -1,3 +1,4 @@
+que pueda leer los empelados en iniciar sesion 
 arreglar turnos, para que se guarden en csv y se pueda leer
 que en la ventana de desvincular se pueda leer el csv de los empleado
 ventana cambiar contrasña se pueda leer el csv de los empleados
