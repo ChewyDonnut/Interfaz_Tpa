@@ -1,4 +1,3 @@
-from ModificarContrasena import ModificarContraseña
 import sys
 from PyQt6.QtGui import QPixmap, QIcon, QFont
 from PyQt6.QtCore import Qt
@@ -7,7 +6,7 @@ from RegistrarEmpleadoTurnos import VentanaRegistroTurno
 from VentanaDesvincular import Desvincular 
 from RegistrarEmpleadoTurnos import VentanaPrincipal
 from RegistrarEmpleadoTurnos import VentanaRegistro
-from ModificarContrasena import ModificarContraseña
+from ModificaraContrasena import ModificarContraseña
 
 class VentanaGerente(QMainWindow):
     def __init__(self):

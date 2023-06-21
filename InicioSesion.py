@@ -30,6 +30,9 @@ class VentanaInicioSesion(QWidget):
         self.ventana_gerente = VentanaGerente()
         self.ventana_empleado = VentanaEmpleado()
 
+        self.nombre_usuario = ""
+        
+        
         logo = QLabel(self)
         imagen = QPixmap(r"logo.png")
         logo.setPixmap(imagen)
@@ -67,12 +70,14 @@ class VentanaInicioSesion(QWidget):
                     self.hide()
                 else:
                     print("Inicio de sesión completado como Empleado")
-                    self.ventana_empleado.show()
+                    ventana_empleado = VentanaEmpleado(empleado.getNombre())
+                    ventana_empleado.show()
                     self.hide()
             else:
                 QMessageBox.warning(self, "Error", "Contraseña incorrecta")
         else:
             QMessageBox.warning(self, "Error", "Usuario incorrecto")
+
 
 
 if __name__ == '__main__':

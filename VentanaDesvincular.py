@@ -54,6 +54,7 @@ class Desvincular(QMainWindow):
         try:
             with open('empleados.csv', newline='') as archivo:
                 reader = csv.reader(archivo)
+                next(reader)
                 for empleado in reader:
                     nombre = empleado[0]
                     self.lista.addItem(nombre)
@@ -69,7 +70,6 @@ class Desvincular(QMainWindow):
             try:
                 with open('empleados.csv', 'r') as archivo:
                     empleados = list(csv.reader(archivo))
-            
                 with open('empleados.csv', 'w', newline='') as archivo:
                     writer = csv.writer(archivo)
                     for empleado in empleados:

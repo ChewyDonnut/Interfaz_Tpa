@@ -1,8 +1,8 @@
 import sys
 import csv
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QMainWindow, QApplication, QWidget, QLabel, QPushButton, QGridLayout, QVBoxLayout, QDialog, QHBoxLayout, QLineEdit, QTableWidget,QTableWidgetItem
-
+from PyQt6.QtGui import QPixmap
+from PyQt6.QtWidgets import QMainWindow, QApplication, QWidget, QLabel, QPushButton, QGridLayout,QMessageBox, QVBoxLayout, QDialog, QHBoxLayout, QLineEdit, QTableWidget,QTableWidgetItem
 class HorasTrabajadas(QDialog):
     def __init__(self):
         super().__init__()
@@ -148,12 +148,15 @@ class CambiarContrasena(QDialog):
 
         self.boton_confirmar = QPushButton("Confirmar")
 
+        #Conectar botón
+        self.boton_confirmar.clicked.connect(self.cambiar_contrasena)
+
         #Contenedores
         entradas = QGridLayout()
-        entradas.addWidget(self.texto_contrasena,0,0)
-        entradas.addWidget(self.entrada_contrasena,0,1)
-        entradas.addWidget(self.texto_confirmar,1,0)
-        entradas.addWidget(self.entrada_confirmar,1,1)
+        entradas.addWidget(self.texto_contrasena, 0, 0)
+        entradas.addWidget(self.entrada_contrasena, 0, 1)
+        entradas.addWidget(self.texto_confirmar, 1, 0)
+        entradas.addWidget(self.entrada_confirmar, 1, 1)
 
         entradas_widget = QWidget()
         entradas_widget.setLayout(entradas)
@@ -165,21 +168,59 @@ class CambiarContrasena(QDialog):
 
         self.setLayout(contenedor)
 
+    def cambiar_contrasena(self):
+        nueva_contrasena = self.entrada_contrasena.text()
+        confirmar_contrasena = self.entrada_confirmar.text()
+
+        if nueva_contrasena == confirmar_contrasena:
+            nombre_usuario = self.nombre_usuario
+
+            # Leer el archivo CSV y actualizar la contraseña
+            filas_actualizadas = []
+            with open("empleados.csv", "r") as archivo_csv:
+                lector_csv = csv.reader(archivo_csv)
+                encabezados = next(lector_csv)  # Leer los encabezados
+                filas_actualizadas.append(encabezados)  # Agregar los encabezados a las filas actualizadas
+                for fila in lector_csv:
+                    if fila[0] == nombre_usuario:
+                        fila[3] = nueva_contrasena  # Actualizar la contraseña en la fila correspondiente
+                    filas_actualizadas.append(fila)
+
+            # Escribir las filas actualizadas en el archivo CSV
+            with open("empleados.csv", "w", newline='') as archivo_csv:
+                escritor_csv = csv.writer(archivo_csv)
+                escritor_csv.writerows(filas_actualizadas)
+
+            # Mostrar mensaje de éxito al usuario
+            QMessageBox.information(self, "Cambio de contraseña", "La contraseña se ha cambiado exitosamente.")
+        else:
+            # Mostrar mensaje de error al usuario
+            QMessageBox.warning(self, "Error", "Las contraseñas no coinciden. Por favor, inténtalo nuevamente.")
+
+        # Limpiar las entradas de contraseña
+        self.entrada_contrasena.clear()
+        self.entrada_confirmar.clear()
+
+
+
 class VentanaEmpleado(QWidget):
-    def __init__(self):
+    def __init__(self, nombre_usuario=None, rol=None):
         super().__init__()
-        self.setFixedSize(530,610)
+        self.setFixedSize(530, 610)
         self.setWindowTitle("Ventana Empleado")
-        #ventanas
+        # ventanas
         self.horas_trabajadas = HorasTrabajadas()
         self.ver_turnos = VentanaHorarios()
         self.ingreso_salida = IngresoSalida()
         self.cambiar_con = CambiarContrasena()
 
-        #Elementos
-        logo = QLabel("Empresa")
-        self.bienvenida = QLabel(f"Bienvenido: <nombre> Area: <rol>")
-        #centrar textos
+        # Elementos
+        logo = QLabel(self)
+        imagen = QPixmap(r"./logo.png")
+        logo.setPixmap(imagen)
+        self.bienvenida = QLabel(f"Bienvenido: {nombre_usuario}")
+
+        # centrar textos
         logo.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.bienvenida.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.boton_cambiar = QPushButton("Cambiar contraseña")
@@ -189,21 +230,21 @@ class VentanaEmpleado(QWidget):
 
         self.lista_pendientes = QLabel()
 
-        #conectar botones
+        # conectar botones
         self.boton_horas_trabajadas.clicked.connect(lambda: self.desplegar(0))
         self.boton_ver_turnos.clicked.connect(lambda: self.desplegar(1))
         self.boton_ingsal.clicked.connect(lambda: self.desplegar(2))
-        self.boton_cambiar.clicked.connect(lambda: self.desplegar(3))
+        self.boton_cambiar.clicked.connect(self.abrir_cambiar_contrasena)
 
-        #Contenedores
+        # Contenedores
         botones = QGridLayout()
-        botones.addWidget(self.boton_cambiar,0,1)
-        botones.addWidget(self.boton_ver_turnos,1,0)
-        botones.addWidget(self.boton_horas_trabajadas,1,1)
-        botones.addWidget(self.boton_ingsal,1,2)
-        
+        botones.addWidget(self.boton_cambiar, 0, 1)
+        botones.addWidget(self.boton_ver_turnos, 1, 0)
+        botones.addWidget(self.boton_horas_trabajadas, 1, 1)
+        botones.addWidget(self.boton_ingsal, 1, 2)
+
         botones_widget = QWidget()
-        
+
         botones_widget.setLayout(botones)
 
         contenedor = QVBoxLayout()
@@ -213,32 +254,13 @@ class VentanaEmpleado(QWidget):
         contenedor.addWidget(self.lista_pendientes)
 
         self.setLayout(contenedor)
-    
-    def desplegar(self,id:int):
-        #id 0 para horas trabajadas
-        if id == 0:
-            if self.horas_trabajadas.isHidden():
-                self.horas_trabajadas.show()
-            else:
-                self.horas_trabajadas.hide()
-        #id 1 para ver turnos
-        if id == 1:
-            if self.ver_turnos.isHidden():
-                self.ver_turnos.show()
-            else:
-                self.ver_turnos.hide()
-        #id 2 para ingreso/salida
-        if id == 2:
-            if self.ingreso_salida.isHidden():
-                self.ingreso_salida.show()
-            else:
-                self.ingreso_salida.hide()
-        #id 3 para cambiar contraseña
-        if id == 3:
-            if self.cambiar_con.isHidden():
-                self.cambiar_con.show()
-            else:
-                self.cambiar_con.hide()
+
+        self.nombre_usuario = nombre_usuario
+
+    def abrir_cambiar_contrasena(self):
+        self.cambiar_con.nombre_usuario = self.nombre_usuario
+        self.cambiar_con.show()
+
 
         
 if __name__ == "__main__":
