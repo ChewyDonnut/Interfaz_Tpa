@@ -101,7 +101,6 @@ class VentanaRegistro(QDialog):
         if not existente:
             with open("Turnos.csv", "a", newline="") as archivo_csv:
                 writer = csv.writer(archivo_csv)
-                writer.writerow(["Nombre", "Turno", "Fecha", "Rol"])  # Agregar la primera fila de encabezado
 
                 writer.writerow([empleado, horario, dia, rol])  # Agregar el rol en la fila
             QMessageBox.information(self, "Turnos Nombre Empresa", "Turno creado exitosamente.")
