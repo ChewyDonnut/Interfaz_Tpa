@@ -1,5 +1,5 @@
 import csv
-from PyQt6.QtWidgets import QWidget, QCalendarWidget, QApplication, QComboBox, QMainWindow, QLabel, QVBoxLayout, QPushButton, QDialog, QMessageBox
+from PyQt6.QtWidgets import QWidget, QCalendarWidget, QLineEdit,QApplication, QComboBox, QMainWindow, QLabel, QVBoxLayout, QPushButton, QDialog, QMessageBox
 
 class VentanaPrincipal(QMainWindow):
     def __init__(self):
@@ -25,7 +25,7 @@ class VentanaPrincipal(QMainWindow):
         self.setCentralWidget(central_widget)
 
     def mostrar_ventana_turno(self):
-        ventana_turno = VentanaRegistro()
+        ventana_turno = VentanaRegistroTurno()
         ventana_turno.exec()
 
     def mostrar_ventana_modificar(self):
@@ -33,6 +33,76 @@ class VentanaPrincipal(QMainWindow):
         ventana_modificar.exec()
 
 class VentanaRegistro(QDialog):
+    def __init__(self):
+        super().__init__()
+        self.init_ui()
+
+    def init_ui(self):
+        self.setWindowTitle("Registro De Empleados (Nombre Empresa)")
+
+        self.etiqueta_nombre = QLabel("Nombre:")
+        self.campo_nombre = QLineEdit()
+        self.etiqueta_rol=QLabel("Rol")
+        self.combo_box=QComboBox()
+        self.combo_box.addItem("Gerente")
+        self.combo_box.addItem("Jefe de turno")
+        self.combo_box.addItem("Recepcionista")
+        self.combo_box.addItem("Botonoes")        
+        self.combo_box.addItem("Guardia de seguridad")
+        self.combo_box.addItem("Mucama")
+        self.combo_box.addItem("Cocinero")        
+        self.combo_box.addItem("Bartender")
+        self.combo_box.addItem("Camarero")
+
+        self.etiqueta_usuario = QLabel("Usuario")
+        self.campo_usuario = QLineEdit()
+        self.etiqueta_contrasena = QLabel("Contrasena:")
+        self.campo_contrasena = QLineEdit()
+        self.campo_contrasena.setEchoMode(QLineEdit.EchoMode.Password)
+        self.etiqueta_contrasena_confirmar = QLabel("confirmar Contrasena:")
+        self.campo_contrasena_confirmar=QLineEdit()
+        self.campo_contrasena_confirmar.setEchoMode(QLineEdit.EchoMode.Password)
+        self.boton_guardar = QPushButton("Guardar")
+        self.boton_guardar.clicked.connect(self.guardar_datos)
+
+        layout = QVBoxLayout()
+        layout.addWidget(self.etiqueta_nombre)
+        layout.addWidget(self.campo_nombre)
+        layout.addWidget(self.etiqueta_rol)
+        layout.addWidget(self.combo_box)
+        layout.addWidget(self.etiqueta_usuario)
+        layout.addWidget(self.campo_usuario)
+        layout.addWidget(self.etiqueta_contrasena)
+        layout.addWidget(self.campo_contrasena)
+        layout.addWidget(self.etiqueta_contrasena_confirmar)
+        layout.addWidget(self.campo_contrasena_confirmar)
+        layout.addWidget(self.boton_guardar)
+
+        self.setLayout(layout)
+    def guardar_datos(self):                    # funcion de guardar datos 
+               
+        nombre = self.campo_nombre.text().strip()
+        usuario = self.campo_usuario.text().strip()
+        contrasena = self.campo_contrasena.text().strip()
+        contrasena_confirmar=self.campo_contrasena_confirmar.text().strip()
+        rol=self.combo_box.currentText()
+        if not nombre or not usuario or not contrasena:
+            QMessageBox.information(self, "Empleados (Nombre Empresa)", "debe rellenar todos los campos.")
+        elif contrasena!= contrasena_confirmar:
+            QMessageBox.information(self,"Empleados (Nombre Empresa)","contraseñas diferentes")
+        else:
+           with open("empleados.csv","a",newline="") as archivo_csv:
+            archivo_csv.write(nombre + ",")
+            archivo_csv.write(rol + ",")
+            archivo_csv.write(usuario + ",")
+            archivo_csv.write(contrasena + "\n")
+            QMessageBox.information(self, "Empleados (Nombre Empresa)", "Empleado registrado exitosamente.")
+            self.campo_nombre.clear()
+            self.campo_usuario.clear()
+            self.campo_contrasena.clear()
+            self.campo_contrasena_confirmar.clear()
+            self.close()
+class VentanaRegistroTurno(QDialog):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Turnos Nombre Empresa")

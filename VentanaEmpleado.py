@@ -1,6 +1,7 @@
 import sys
+import csv
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QMainWindow, QApplication, QWidget, QLabel, QPushButton, QGridLayout, QVBoxLayout, QDialog, QHBoxLayout, QLineEdit, QTableWidget
+from PyQt6.QtWidgets import QMainWindow, QApplication, QWidget, QLabel, QPushButton, QGridLayout, QVBoxLayout, QDialog, QHBoxLayout, QLineEdit, QTableWidget,QTableWidgetItem
 
 class HorasTrabajadas(QDialog):
     def __init__(self):
@@ -45,34 +46,56 @@ class HorasTrabajadas(QDialog):
         contenedor_principal.addWidget(self.boton_volver)
         self.setLayout(contenedor_principal)
 
-class VerTurnos(QDialog):
+
+class VentanaHorarios(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Turnos")
-        self.setFixedSize(700,430)
-        self.setModal(True)
-        #Elementos
-        logo = QLabel("Empresa")
-        self.tabla = QTableWidget()
-        logo.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.setWindowTitle("Horarios Asignados")
+        self.init_ui()
 
-        self.boton_volver = QPushButton("Volver al menu")
+    def init_ui(self):
+        self.table_widget = QTableWidget()
+        self.table_widget.setColumnCount(3)
+        self.table_widget.setHorizontalHeaderLabels(["Empleado", "Horario", "Fecha"])
 
-        #Config
+        self.cargar_horarios()
 
-        for i in range(7):
-            self.tabla.insertColumn(i)
-        self.tabla.setHorizontalHeaderLabels(["Lunes","Martes","Miercoles","Jueves","Viernes","Sabado","Domingo"])
-        #Conectar botones
-        self.boton_volver.clicked.connect(self.hide)
-        
-        #Contenedores
-        contenedor = QVBoxLayout()
-        contenedor.addWidget(logo)
-        contenedor.addWidget(self.tabla)
-        contenedor.addWidget(self.boton_volver)
+        layout = QVBoxLayout()
+        layout.addWidget(self.table_widget)
 
-        self.setLayout(contenedor)
+        central_widget = QWidget()
+        central_widget.setLayout(layout)
+        self.setCentralWidget(central_widget)
+
+    def cargar_horarios(self):
+        with open("Turnos.csv", "r") as archivo_csv:
+            reader = csv.reader(archivo_csv)
+            next(reader)  # Saltar la primera fila de encabezado
+
+            row_count = sum(1 for _ in reader)
+            self.table_widget.setRowCount(row_count)
+
+            archivo_csv.seek(0)  # Volver al inicio del archivo
+            next(reader)  # Saltar la primera fila de encabezado nuevamente
+
+            row_index = 0
+            for row in reader:
+                empleado = row[0]
+                horario = row[1]
+                fecha = row[2]
+
+                item_empleado = QTableWidgetItem(empleado)
+                item_horario = QTableWidgetItem(horario)
+                item_fecha = QTableWidgetItem(fecha)
+
+                self.table_widget.setItem(row_index, 0, item_empleado)
+                self.table_widget.setItem(row_index, 1, item_horario)
+                self.table_widget.setItem(row_index, 2, item_fecha)
+
+                row_index += 1
+
+
+
 
 class IngresoSalida(QDialog):
     def __init__(self):
@@ -149,7 +172,7 @@ class VentanaEmpleado(QWidget):
         self.setWindowTitle("Ventana Empleado")
         #ventanas
         self.horas_trabajadas = HorasTrabajadas()
-        self.ver_turnos = VerTurnos()
+        self.ver_turnos = VentanaHorarios()
         self.ingreso_salida = IngresoSalida()
         self.cambiar_con = CambiarContrasena()
 

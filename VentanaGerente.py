@@ -3,19 +3,22 @@ import sys
 from PyQt6.QtGui import QPixmap, QIcon, QFont
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QVBoxLayout, QHBoxLayout, QMainWindow
-from RegistrarEmpleadoTurnos import VentanaRegistro
+from RegistrarEmpleadoTurnos import VentanaRegistroTurno
 from VentanaDesvincular import Desvincular 
 from RegistrarEmpleadoTurnos import VentanaPrincipal
+from RegistrarEmpleadoTurnos import VentanaRegistro
 from ModificarContrasena import ModificarContraseña
+
 class VentanaGerente(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Sistema de Gestión")
         self.setWindowIcon(QIcon(r".\logo.png"))  
-        self.ventana_registrar = VentanaRegistro()
+        self.ventana_registrar_turno = VentanaRegistroTurno()
         self.ventana_desvincular = Desvincular()
         self.ventana_crear_modificar = VentanaPrincipal()
         self.ventana_modificar_contrasena = ModificarContraseña()
+        self.ventana_registrar_usuario=VentanaRegistro()
         # Logo y nombre 
         self.logo_lbl = QLabel()
         self.logo_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -38,7 +41,7 @@ class VentanaGerente(QMainWindow):
         self.modificar_contrasena_btn = QPushButton("Modificar contraseña de empleado")
 
         self.modificar_contrasena_btn.clicked.connect(lambda: self.ventana_modificar_contrasena.show())
-        self.registrar_btn.clicked.connect(lambda: self.ventana_registrar.show())
+        self.registrar_btn.clicked.connect(lambda: self.ventana_registrar_usuario.show())
         self.despedir_btn.clicked.connect(lambda: self.ventana_desvincular.show())
         self.crear_modificar_btn.clicked.connect(lambda: self.ventana_crear_modificar.show())
         # Diseño de la ventana
