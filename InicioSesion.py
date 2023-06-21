@@ -1,27 +1,27 @@
 import sys
+import csv
 from VentanaEmpleado import VentanaEmpleado
 from VentanaGerente import VentanaGerente
 from PyQt6.QtGui import QPixmap, QIcon
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout
+from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QMessageBox
 from Gerente import Gerente
 from Empleado import Empleado
 
-#Gerente("Yo","Gerente","Yo","123") y Empleado("Yo","Mucama","Empleado","123")
-# son usuarios de prueba
-#Para ventana empleado loguearse como Empleado:123 para gerente
-# loguearse como Gerente:123
-empleados = [Empleado("Yo","Mucama","Empleado","123"), Gerente("Yo","Gerente","Gerente","123"),Gerente("yo","Gerente","","")]
-usuarios_empleados = {"gerentes": "",
-                      "empleados": ""}
-claves = []
+usuarios_contrasenas = {}
 
-for i in range(len(empleados)):
-    if empleados[i].getRol() == "Gerente":
-        usuarios_empleados["gerentes"] += empleados[i].getUsuario()
-    else:
-        usuarios_empleados["empleados"] += empleados[i].getUsuario()
-    claves.append(empleados[i].getContrasena())
+with open('empleados.csv', newline='') as archivo:
+    lector_csv = csv.reader(archivo, delimiter=',')
+    next(lector_csv)  # Ignorar la primera línea de encabezados
+    for fila in lector_csv:
+        nombre = fila[0].strip()
+        rol = fila[1].strip()
+        usuario = fila[2].strip()
+        contrasena = fila[3].strip()
+        if rol == "Gerente":
+            usuarios_contrasenas[usuario] = Gerente(nombre, rol, usuario, contrasena)
+        else:
+            usuarios_contrasenas[usuario] = Empleado(nombre, rol, usuario, contrasena)
 
 class VentanaInicioSesion(QWidget):
     def __init__(self):
@@ -30,11 +30,11 @@ class VentanaInicioSesion(QWidget):
         self.ventana_gerente = VentanaGerente()
         self.ventana_empleado = VentanaEmpleado()
 
-
         logo = QLabel(self)
-        imagen = QPixmap((r"logo.png"))
+        imagen = QPixmap(r"logo.png")
         logo.setPixmap(imagen)
         logo.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
         # inicio de sesión
         self.etiqueta_usuario = QLabel("Usuario:")
         self.entrada_usuario = QLineEdit()
@@ -49,7 +49,7 @@ class VentanaInicioSesion(QWidget):
         layout.addWidget(logo)
         layout.addWidget(self.etiqueta_usuario)
         layout.addWidget(self.entrada_usuario)
-        layout.addWidget(self.etiqueta_contrasena)  
+        layout.addWidget(self.etiqueta_contrasena)
         layout.addWidget(self.entrada_contrasena)
         layout.addWidget(self.boton_inicio_sesion)
 
@@ -58,20 +58,21 @@ class VentanaInicioSesion(QWidget):
     def iniciar_sesion(self):
         usuario = self.entrada_usuario.text()
         contrasena = self.entrada_contrasena.text()
-        if usuario in usuarios_empleados["gerentes"] or usuario in usuarios_empleados["empleados"]:
-            if contrasena in claves:
-                if usuario in usuarios_empleados["gerentes"]:
-                    print("Inicio de sesión completado")
+        if usuario in usuarios_contrasenas:
+            empleado = usuarios_contrasenas[usuario]
+            if contrasena == empleado.getContrasena():
+                if empleado.getRol() == "Gerente":
+                    print("Inicio de sesión completado como Gerente")
                     self.ventana_gerente.show()
                     self.hide()
                 else:
-                    print("Inicio de sesión completado")
+                    print("Inicio de sesión completado como Empleado")
                     self.ventana_empleado.show()
                     self.hide()
             else:
-                print("Contraseña incorrecta")
+                QMessageBox.warning(self, "Error", "Contraseña incorrecta")
         else:
-            print("No existe el usuario")
+            QMessageBox.warning(self, "Error", "Usuario incorrecto")
 
 
 if __name__ == '__main__':
