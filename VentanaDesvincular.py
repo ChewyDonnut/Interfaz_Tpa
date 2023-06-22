@@ -30,13 +30,13 @@ class Desvincular(QMainWindow):
         logo.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         #botones
-        volver=QPushButton("volver")
+        self.volver=QPushButton("volver")
         #volver.clicked.connect(self.cerrar)#creo que se puede achicar la funcion
-       
+        self.volver.clicked.connect(self.hide)
 
         #asignar widgets
         subVentana.addWidget(self.lista)
-        subVentana.addWidget(volver)
+        subVentana.addWidget(self.volver)
         ventanaGrande.addWidget(logo)
         ventanaGrande.addWidget(self.titulo)
         ventanaGrande.addWidget(self.indicacion)
