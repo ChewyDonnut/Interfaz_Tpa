@@ -3,50 +3,6 @@ import csv
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QMainWindow, QApplication, QWidget, QLabel, QPushButton, QGridLayout,QMessageBox, QVBoxLayout, QDialog, QHBoxLayout, QLineEdit, QTableWidget,QTableWidgetItem
-class HorasTrabajadas(QDialog):
-    def __init__(self):
-        super().__init__()
-        self.setFixedSize(340,340)
-        self.setWindowTitle("Horas trabajadas")
-        self.setModal(True)
-        #Elementos
-        # Logo
-        logo = QLabel("Empresa")
-        self.texto1 = QLabel("Horas trabajadas")
-        self.texto2 = QLabel("Semana")
-        self.texto3 = QLabel("Mes")
-        self.texto2_horas = QLabel("0")
-        self.texto3_horas = QLabel("0")
-        #centrar labels
-        logo.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.texto1.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.texto2.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.texto3.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.texto2_horas.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.texto3_horas.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.boton_volver = QPushButton("Volver al menu")
-
-        #Conectar botones
-        self.boton_volver.clicked.connect(self.hide)
-
-        #Contenedores
-        textos = QGridLayout()
-        textos.addWidget(self.texto1,0,1)
-        textos.addWidget(self.texto2,1,0)
-        textos.addWidget(self.texto3,1,2)
-        textos.addWidget(self.texto2_horas,2,0)
-        textos.addWidget(self.texto3_horas,2,2)
-
-        textos_widget = QWidget()
-        textos_widget.setLayout(textos)
-
-        contenedor_principal = QVBoxLayout()
-        contenedor_principal.addWidget(logo)
-        contenedor_principal.addWidget(textos_widget)
-        contenedor_principal.addWidget(self.boton_volver)
-        self.setLayout(contenedor_principal)
-
-
 class VentanaHorarios(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -94,41 +50,6 @@ class VentanaHorarios(QMainWindow):
 
                 row_index += 1
 
-
-
-
-class IngresoSalida(QDialog):
-    def __init__(self):
-        super().__init__()
-        self.setWindowTitle("Marcar Ingreso o Salida")
-        self.setFixedSize(430,430)
-        self.setModal(True)
-
-        #Elementos
-        logo = QLabel("Empresa")
-        self.boton_ingreso = QPushButton("Ingreso")
-        self.boton_salida = QPushButton("Salida")
-        self.boton_volver = QPushButton("Volver al menu")
-        
-        logo.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        #Conectar botones
-        self.boton_volver.clicked.connect(self.hide)
-        #Contenedores
-        botones = QHBoxLayout()
-        botones.addWidget(self.boton_ingreso)
-        botones.addWidget(self.boton_salida)
-
-        botones_widget = QWidget()
-        botones_widget.setLayout(botones)
-
-        contenedor = QVBoxLayout()
-        contenedor.addWidget(logo)
-        contenedor.addWidget(botones_widget)
-        contenedor.addWidget(self.boton_volver)
-
-        self.setLayout(contenedor)
-        
 
 class CambiarContrasena(QDialog):
     def __init__(self):
@@ -211,9 +132,7 @@ class VentanaEmpleado(QWidget):
         self.setFixedSize(530, 610)
         self.setWindowTitle("Ventana Empleado")
         # ventanas
-        self.horas_trabajadas = HorasTrabajadas()
         self.ver_turnos = VentanaHorarios()
-        self.ingreso_salida = IngresoSalida()
         self.cambiar_con = CambiarContrasena()
 
         # Elementos
@@ -227,23 +146,17 @@ class VentanaEmpleado(QWidget):
         self.bienvenida.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.boton_cambiar = QPushButton("Cambiar contraseña")
         self.boton_ver_turnos = QPushButton("Ver turnos")
-        self.boton_horas_trabajadas = QPushButton("Horas trabajadas")
-        self.boton_ingsal = QPushButton("Ingreso/Salida")
 
         self.lista_pendientes = QLabel()
 
         # conectar botones
-        self.boton_horas_trabajadas.clicked.connect(lambda: self.desplegar(0))
         self.boton_ver_turnos.clicked.connect(lambda: self.desplegar(1))
-        self.boton_ingsal.clicked.connect(lambda: self.desplegar(2))
         self.boton_cambiar.clicked.connect(self.abrir_cambiar_contrasena)
 
         # Contenedores
         botones = QGridLayout()
-        botones.addWidget(self.boton_cambiar, 0, 1)
-        botones.addWidget(self.boton_ver_turnos, 1, 0)
-        botones.addWidget(self.boton_horas_trabajadas, 1, 1)
-        botones.addWidget(self.boton_ingsal, 1, 2)
+        botones.addWidget(self.boton_cambiar, 0, 0)
+        botones.addWidget(self.boton_ver_turnos,0,1)
 
         botones_widget = QWidget()
 
@@ -263,25 +176,11 @@ class VentanaEmpleado(QWidget):
         self.cambiar_con.nombre_usuario = self.nombre_usuario
         self.cambiar_con.exec()
     def desplegar(self, id: int):
-        # id 0 para horas trabajadas
-        if id == 0:
-            if self.horas_trabajadas.isHidden():
-                self.horas_trabajadas.show()
-            else:
-                self.horas_trabajadas.hide()
-        # id 1 para ver turnos
         if id == 1:
             if self.ver_turnos.isHidden():
                 self.ver_turnos.show()
             else:
                 self.ver_turnos.hide()
-        # id 2 para ingreso/salida
-        if id == 2:
-            if self.ingreso_salida.isHidden():
-                self.ingreso_salida.show()
-            else:
-                self.ingreso_salida.hide()
-        # id 3 para cambiar contraseña
         if id == 3:
             if self.cambiar_con.isHidden():
                 self.cambiar_con.show()
