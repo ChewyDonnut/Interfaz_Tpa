@@ -129,7 +129,6 @@ class CambiarContrasena(QDialog):
 class VentanaEmpleado(QWidget):
     def __init__(self, nombre_usuario=None, rol=None):
         super().__init__()
-        self.setFixedSize(530, 610)
         self.setWindowTitle("Ventana Empleado")
         # ventanas
         self.ver_turnos = VentanaHorarios()
@@ -139,7 +138,7 @@ class VentanaEmpleado(QWidget):
         logo = QLabel(self)
         imagen = QPixmap(r"./logo.png")
         logo.setPixmap(imagen)
-        self.bienvenida = QLabel(f"Bienvenido: {nombre_usuario}")
+        self.bienvenida = QLabel(f"Bienvenido/a: {nombre_usuario}")
 
         # centrar textos
         logo.setAlignment(Qt.AlignmentFlag.AlignCenter)

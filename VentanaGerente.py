@@ -17,7 +17,7 @@ class VentanaGerente(QMainWindow):
         self.ventana_desvincular = Desvincular()
         self.ventana_crear_modificar = VentanaPrincipal()
         self.ventana_modificar_contrasena = ModificarContraseña()
-        self.ventana_registrar_usuario=VentanaRegistro()
+        self.ventana_registrar_usuario = VentanaRegistro()
         # Logo y nombre 
         self.logo_lbl = QLabel()
         self.logo_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -29,7 +29,7 @@ class VentanaGerente(QMainWindow):
         self.empresa_lbl.setStyleSheet("font-size: 20px; font-weight: bold;")
 
         # bienvenida
-        self.bienvenida_lbl = QLabel("Bienvenido/a, [Nombre]")
+        self.bienvenida_lbl = QLabel("Bienvenido/a")
         self.bienvenida_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.bienvenida_lbl.setFont(QFont("Arial", 16))
 
@@ -39,7 +39,7 @@ class VentanaGerente(QMainWindow):
         self.crear_modificar_btn = QPushButton("Crear o modificar turnos")
         self.modificar_contrasena_btn = QPushButton("Modificar contraseña de empleado")
 
-        self.modificar_contrasena_btn.clicked.connect(lambda: self.ventana_modificar_contrasena.show())
+        self.modificar_contrasena_btn.clicked.connect(self.mostrar_empleados)
         self.registrar_btn.clicked.connect(lambda: self.ventana_registrar_usuario.show())
         self.despedir_btn.clicked.connect(lambda: self.ventana_desvincular.show())
         self.crear_modificar_btn.clicked.connect(lambda: self.ventana_crear_modificar.show())
@@ -65,9 +65,9 @@ class VentanaGerente(QMainWindow):
 
         self.setCentralWidget(layout_widget)
 
-    def modificar(self):
-        self.modi=ModificarContraseña()
-        self.modi.show()
+    def mostrar_empleados(self):
+        self.ventana_modificar_contrasena.cargar_empleados_csv()
+        self.ventana_modificar_contrasena.show()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

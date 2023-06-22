@@ -4,20 +4,6 @@ from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QWidget, QApplication, QVBoxLayout, QLabel, QListWidget, QListWidgetItem, QHBoxLayout, QPushButton, QMainWindow, QLineEdit, QDialog, QGridLayout, QMessageBox
 from PyQt6.QtCore import Qt
 
-def update_password_in_csv(username, new_password, csv_file):
-    data = []
-    with open(csv_file, "r", newline="") as csvfile:
-        reader = csv.reader(csvfile, dialect="excel")
-        for row in reader:
-            data.append(row)
-    for row in data:
-        if row[2] == username:
-            row[3] = new_password
-            break
-    with open(csv_file, "w", newline="") as csvfile:
-        writer = csv.writer(csvfile, dialect="excel")
-        writer.writerows(data)
-
 class ModificarContraseña(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -67,7 +53,7 @@ class ModificarContraseña(QMainWindow):
         if items:
             username = items[0].text()
             clave = items[0].data(Qt.ItemDataRole.UserRole)
-            modificar = Modificar(username, clave)
+            modificar = Modificar(self, username, clave)
             modificar.exec()
 
     def cerrar(self):
@@ -75,12 +61,27 @@ class ModificarContraseña(QMainWindow):
 
     def get_items(self):
         items = self.lista.selectedItems()
-        for item in items:
-            print(item.text())
+    
+
+    def update_password_in_csv(self, username, new_password):
+        data = []
+        csv_file = "empleados.csv"
+        with open(csv_file, "r", newline="") as csvfile:
+            reader = csv.reader(csvfile, dialect="excel")
+            for row in reader:
+                data.append(row)
+        for row in data:
+            if row[2] == username:
+                row[3] = new_password
+                break
+        with open(csv_file, "w", newline="") as csvfile:
+            writer = csv.writer(csvfile, dialect="excel")
+            writer.writerows(data)
+
 
 class Modificar(QDialog):
-    def __init__(self, username, clave):
-        super().__init__()
+    def __init__(self, parent, username, clave):
+        super().__init__(parent)
         self.setWindowTitle("Cambio de Contraseña")
         self.username = username
         self.clave = clave
@@ -89,8 +90,8 @@ class Modificar(QDialog):
         datos = QGridLayout()
 
         self.titulo = QLabel("Cambiar contraseña de usuario: " + self.username)
-        self.contrasena = QLabel("Contraseña")
-        self.confirmar_contrasena = QLabel("Confirmar contraseña")
+        self.contrasena = QLabel("Nueva contraseña: ")
+        self.confirmar_contrasena = QLabel("Confirmar contraseña: ")
 
         self.modificar_contrasena = QLineEdit()
         self.modificar_contrasena.setEchoMode(QLineEdit.EchoMode.Password)
@@ -120,13 +121,14 @@ class Modificar(QDialog):
             if c != "":
                 QMessageBox.information(self, "Modificar contraseña", "Contraseña cambiada.")
                 new_password = a
-                csv_file = "empleados.csv"
-                update_password_in_csv(self.username, new_password, csv_file)
+                parent = self.parent()
+                parent.update_password_in_csv(self.username, new_password)
                 self.close()
             else:
                 QMessageBox.information(self, "Modificar contraseña", "Contraseña vacía")
         else:
             QMessageBox.information(self, "Modificar contraseña", "Las contraseñas no coinciden.")
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
