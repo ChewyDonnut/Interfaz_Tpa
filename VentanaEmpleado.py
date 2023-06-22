@@ -171,36 +171,38 @@ class CambiarContrasena(QDialog):
     def cambiar_contrasena(self):
         nueva_contrasena = self.entrada_contrasena.text()
         confirmar_contrasena = self.entrada_confirmar.text()
-
-        if nueva_contrasena == confirmar_contrasena:
-            nombre_usuario = self.nombre_usuario
-
-            # Leer el archivo CSV y actualizar la contraseña
-            filas_actualizadas = []
-            with open("empleados.csv", "r") as archivo_csv:
-                lector_csv = csv.reader(archivo_csv)
-                encabezados = next(lector_csv)  # Leer los encabezados
-                filas_actualizadas.append(encabezados)  # Agregar los encabezados a las filas actualizadas
-                for fila in lector_csv:
-                    if fila[0] == nombre_usuario:
-                        fila[3] = nueva_contrasena  # Actualizar la contraseña en la fila correspondiente
-                    filas_actualizadas.append(fila)
-
-            # Escribir las filas actualizadas en el archivo CSV
-            with open("empleados.csv", "w", newline='') as archivo_csv:
-                escritor_csv = csv.writer(archivo_csv)
-                escritor_csv.writerows(filas_actualizadas)
-
-            # Mostrar mensaje de éxito al usuario
-            QMessageBox.information(self, "Cambio de contraseña", "La contraseña se ha cambiado exitosamente.")
+        if not nueva_contrasena and not confirmar_contrasena:
+            QMessageBox.information(self,"Error","Rellene todos los campos")
         else:
-            # Mostrar mensaje de error al usuario
-            QMessageBox.warning(self, "Error", "Las contraseñas no coinciden. Por favor, inténtalo nuevamente.")
+            if nueva_contrasena == confirmar_contrasena:
+                nombre_usuario = self.nombre_usuario
+        
+                # Leer el archivo CSV y actualizar la contraseña
+                filas_actualizadas = []
+                with open("empleados.csv", "r") as archivo_csv:
+                    lector_csv = csv.reader(archivo_csv)
+                    encabezados = next(lector_csv)  # Leer los encabezados
+                    filas_actualizadas.append(encabezados)  # Agregar los encabezados a las filas actualizadas
+                    for fila in lector_csv:
+                        if fila[0] == nombre_usuario:
+                            fila[3] = nueva_contrasena  # Actualizar la contraseña en la fila correspondiente
+                        filas_actualizadas.append(fila)
+
+                # Escribir las filas actualizadas en el archivo CSV
+                with open("empleados.csv", "w", newline='') as archivo_csv:
+                    escritor_csv = csv.writer(archivo_csv)
+                    escritor_csv.writerows(filas_actualizadas)
+
+                # Mostrar mensaje de éxito al usuario
+                QMessageBox.information(self, "Cambio de contraseña", "La contraseña se ha cambiado exitosamente.")
+            else:
+                # Mostrar mensaje de error al usuario
+                QMessageBox.warning(self, "Error", "Las contraseñas no coinciden. Por favor, inténtalo nuevamente.")
 
         # Limpiar las entradas de contraseña
-        self.entrada_contrasena.clear()
-        self.entrada_confirmar.clear()
-
+            self.entrada_contrasena.clear()
+            self.entrada_confirmar.clear()
+            self.close()
 
 
 class VentanaEmpleado(QWidget):
@@ -259,9 +261,32 @@ class VentanaEmpleado(QWidget):
 
     def abrir_cambiar_contrasena(self):
         self.cambiar_con.nombre_usuario = self.nombre_usuario
-        self.cambiar_con.show()
-
-
+        self.cambiar_con.exec()
+    def desplegar(self, id: int):
+        # id 0 para horas trabajadas
+        if id == 0:
+            if self.horas_trabajadas.isHidden():
+                self.horas_trabajadas.show()
+            else:
+                self.horas_trabajadas.hide()
+        # id 1 para ver turnos
+        if id == 1:
+            if self.ver_turnos.isHidden():
+                self.ver_turnos.show()
+            else:
+                self.ver_turnos.hide()
+        # id 2 para ingreso/salida
+        if id == 2:
+            if self.ingreso_salida.isHidden():
+                self.ingreso_salida.show()
+            else:
+                self.ingreso_salida.hide()
+        # id 3 para cambiar contraseña
+        if id == 3:
+            if self.cambiar_con.isHidden():
+                self.cambiar_con.show()
+            else:
+                self.cambiar_con.hide()
         
 if __name__ == "__main__":
     app = QApplication(sys.argv)
