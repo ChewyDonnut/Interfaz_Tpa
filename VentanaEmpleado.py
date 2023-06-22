@@ -186,7 +186,9 @@ class VentanaEmpleado(QWidget):
                 self.cambiar_con.show()
             else:
                 self.cambiar_con.hide()
-        
+
+
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     ventana = VentanaEmpleado()
